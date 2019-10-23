@@ -64,6 +64,18 @@ class PlanController {
     const plans = await Plan.findAll();
     return res.json(plans);
   }
+
+  async delete(req, res) {
+    const plan = await Plan.findByPk(req.params.id);
+
+    if (!plan) {
+      return res.json('Id do plano não existe!');
+    }
+
+    await plan.destroy();
+
+    return res.json(await Plan.findAll());
+  }
 }
 
 export default new PlanController();
