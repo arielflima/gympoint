@@ -1,7 +1,9 @@
 import * as Yup from 'yup';
-import { parseISO, format } from 'date-fns';
+import { parseISO } from 'date-fns';
 import Student from '../models/Student';
 import HelpOrder from '../models/HelpOrder';
+import Queue from '../../lib/Queue';
+import AnsweredMail from '../jobs/AnsweredMail';
 
 class HelpOrderController {
   async store(req, res) {
@@ -93,6 +95,14 @@ class HelpOrderController {
       question,
       answer,
       answer_at,
+    });
+
+    const student = await Student.findByPk(student_id);
+
+    await Queue.add(AnsweredMail.key, {
+      student,
+      question,
+      answer,
     });
 
     return res.json(answered);
