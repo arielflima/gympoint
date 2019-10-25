@@ -29,6 +29,38 @@ class HelpOrderController {
 
     return res.json(helpOrder);
   }
+
+  async index(req, res) {
+    const { id } = req.params;
+
+    if (!id) {
+      const where = {
+        where: {
+          answer: null,
+        },
+      };
+
+      const noResponses = await HelpOrder.findAll(where);
+
+      return res.json(noResponses);
+    }
+
+    const student = await Student.findByPk(id);
+
+    if (!student) {
+      return res.status(404).json({ error: 'Id de usuário não existe!' });
+    }
+
+    const where = {
+      where: {
+        student_id: id,
+      },
+    };
+
+    const helpOrders = await HelpOrder.findAll(where);
+
+    return res.json(helpOrders);
+  }
 }
 
 export default new HelpOrderController();
