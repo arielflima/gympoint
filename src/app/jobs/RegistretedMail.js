@@ -8,7 +8,7 @@ class RegistretedMail {
   }
 
   async handle({ data }) {
-    const { student, plan, endDateRegistration } = data;
+    const { student, plan, endDateRegistration, priceRegistration } = data;
 
     await Mail.sendMail({
       to: `${student.name} <${student.email}>`,
@@ -17,13 +17,14 @@ class RegistretedMail {
       context: {
         student: student.name,
         plan: plan.title,
-        endDate: format(
+        endDateRegistration: format(
           parseISO(endDateRegistration),
           "dd 'de' MMMM 'de' yyyy",
           {
             locale: pt,
           }
         ),
+        priceRegistration,
       },
     });
   }
